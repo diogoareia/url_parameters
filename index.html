@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>	
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	</head>
+	<body>
+	<div>
+		<span data-bind="text: urlVal"></span>
+	</div>
+	<div>
+		<input data-bind="value: inputVal"></input>
+	</div>
+	<div>
+		<span data-bind="text: results"></span>
+	</div>
+	</body>
+	
+	<script src="js/knockout-3.0.0.js"></script>
+		<script>
+		
+		var viewModel = function(){
+			self = this;
+			self.urlVal = ko.computed(function(){
+				return window.location.href;
+			});
+			self.inputVal = ko.observable('');
+			self.urlParams = ko.observableArray();
+			self.results = ko.observable();
+			
+			self.getParams = function(name){
+				name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+				return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			};
+			
+			self.results(self.getParams('params'));
+		}
+		
+		ko.applyBindings(viewModel);		
+	</script>
+</html>
